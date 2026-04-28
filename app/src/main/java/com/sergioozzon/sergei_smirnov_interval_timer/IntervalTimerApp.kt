@@ -1,9 +1,9 @@
 package com.sergioozzon.sergei_smirnov_interval_timer
 
 import android.app.Application
-import com.learning.intervaltimer.di.data.dataModule
-import com.learning.intervaltimer.di.mainModule
-import com.learning.intervaltimer.di.network.networkModule
+import com.sergioozzon.sergei_smirnov_interval_timer.base.di.data.dataModule
+import com.sergioozzon.sergei_smirnov_interval_timer.base.di.mainModule
+import com.sergioozzon.sergei_smirnov_interval_timer.base.di.network.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -22,8 +22,8 @@ class IntervalTimerApp : Application() {
 
             modules(
                 mainModule,
-                //dataModule,
-                //networkModule
+                dataModule,
+                networkModule
             )
         }
     }
