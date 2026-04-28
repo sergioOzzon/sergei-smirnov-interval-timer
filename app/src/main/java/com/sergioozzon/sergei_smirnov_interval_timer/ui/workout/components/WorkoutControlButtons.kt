@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,8 @@ fun WorkoutControlButtons(
             TimerState.IDLE -> {
                 PrimaryButton(
                     text = stringResource(R.string.workout_button_start),
-                    onClick = onStartClick
+                    onClick = onStartClick,
+                    iconResId = R.drawable.ic_play
                 )
             }
 
@@ -42,14 +42,16 @@ fun WorkoutControlButtons(
                 PrimaryButton(
                     text = stringResource(R.string.workout_button_pause),
                     onClick = onPauseClick,
-                    color = Orange
+                    color = Orange,
+                    iconResId = R.drawable.ic_pause
                 )
             }
 
             TimerState.PAUSED -> {
                 PrimaryButton(
                     text = stringResource(R.string.workout_button_resume),
-                    onClick = onResumeClick
+                    onClick = onResumeClick,
+                    iconResId = R.drawable.ic_play
                 )
             }
 
@@ -57,20 +59,23 @@ fun WorkoutControlButtons(
                 PrimaryButton(
                     text = stringResource(R.string.workout_button_again),
                     onClick = onRestartClick,
-                    color = Secondary
+                    color = Secondary,
+                    iconResId = R.drawable.ic_again
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(IntervalTheme.spacing.m))
 
-        GhostButton(
-            text = if (timerState == TimerState.COMPLETED) {
-                stringResource(R.string.workout_button_new)
-            } else {
-                stringResource(R.string.workout_button_reset)
-            },
-            onClick = if (timerState == TimerState.COMPLETED) onNewWorkoutClick else onResetClick
-        )
+        if (timerState != TimerState.IDLE) {
+            GhostButton(
+                text = if (timerState == TimerState.COMPLETED) {
+                    stringResource(R.string.workout_button_new)
+                } else {
+                    stringResource(R.string.workout_button_reset)
+                },
+                onClick = if (timerState == TimerState.COMPLETED) onNewWorkoutClick else onResetClick
+            )
+        }
     }
 }

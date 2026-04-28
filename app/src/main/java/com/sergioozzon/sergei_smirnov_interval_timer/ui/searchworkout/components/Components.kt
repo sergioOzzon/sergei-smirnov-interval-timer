@@ -1,5 +1,6 @@
 package com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -51,6 +52,7 @@ fun PrimaryButton(
     enabled: Boolean = true,
     isLoading: Boolean = false,
     color: Color = MaterialTheme.colorScheme.primary,
+    @DrawableRes iconResId: Int = 0,
 ) {
     Button(
         onClick = onClick,
@@ -76,6 +78,14 @@ fun PrimaryButton(
                 color = MaterialTheme.colorScheme.primary,
                 strokeWidth = 2.dp,
                 strokeCap = CircularDeterminateStrokeCap
+            )
+        }
+        if (iconResId != 0) {
+            Icon(
+                painter = painterResource(iconResId),
+                contentDescription = null,
+                modifier = Modifier.padding(end = IntervalTheme.spacing.s),
+                tint = Color.White
             )
         }
         Text(
