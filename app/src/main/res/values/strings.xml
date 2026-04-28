@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">sergei-smirnov-interval-timer</string>
+    <string name="app_name">Sergei Smirnov Interval Timer</string>
+
+    <!-- Search Screen -->
+    <string name="search_title">Интервальный\nтаймер</string>
+    <string name="search_description">Введите ID тренировки для загрузки программы интервалов</string>
+    <string name="search_id_label">ID тренировки</string>
+    <string name="search_button_load">Загрузить</string>
+    <string name="search_button_loading">Загрузка…</string>
+    <string name="search_error_not_found">Тренировка не найдена. Проверьте ID.</string>
+    <string name="search_button_retry">Повторить</string>
+
 </resources>
