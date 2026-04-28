@@ -28,8 +28,9 @@ abstract class BaseViewModel<Wish, UiState, SideEffect> : ViewModel() {
     }
 
     protected abstract val _uiState: MutableStateFlow<UiState>
+    private val immutableUiState: StateFlow<UiState> by lazy { _uiState.asStateFlow() }
     val uiState: StateFlow<UiState>
-        get() = _uiState.asStateFlow()
+        get() = immutableUiState
 
 
     init {

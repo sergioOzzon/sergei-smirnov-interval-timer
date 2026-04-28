@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
@@ -51,7 +52,8 @@ fun SearchWorkoutScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    SearchWorkoutScreenContent(uiState, viewModel::sendWish)
+    val onAction = remember(viewModel) { viewModel::sendWish }
+    SearchWorkoutScreenContent(uiState, onAction)
 
     LaunchedEffect(Unit) {
         viewModel
@@ -72,6 +74,17 @@ private fun SearchWorkoutScreenContent(
     uiState: SearchWorkoutViewModel.UiState,
     onAction: (SearchWorkoutViewModel.Wish) -> Unit,
 ) {
+    val onLoadWorkout = remember(onAction) {
+        { onAction(SearchWorkoutViewModel.Wish.GetWorkout()) }
+    }
+    val onInputValueChange: (String) -> Unit = remember(onAction) {
+        { value -> onAction(SearchWorkoutViewModel.Wish.UpdateState(value)) }
+    }
+    val keyboardActions = remember(onLoadWorkout) {
+        KeyboardActions {
+            onLoadWorkout()
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -133,19 +146,13 @@ private fun SearchWorkoutScreenContent(
             placeholder = stringResource(R.string.search_id_label),
             errorText = getErrorTextBy(uiState.error),
             isEnabled = !uiState.loading,
-            onValueChange = { value ->
-                onAction(SearchWorkoutViewModel.Wish.UpdateState(value))
-            },
-            keyboardAction = KeyboardActions {
-                onAction(SearchWorkoutViewModel.Wish.GetWorkout())
-            }
+            onValueChange = onInputValueChange,
+            keyboardAction = keyboardActions
         )
 
         PrimaryButton(
             text = getButtonTextBy(uiState),
-            onClick = {
-                onAction(SearchWorkoutViewModel.Wish.GetWorkout())
-            },
+            onClick = onLoadWorkout,
             modifier = Modifier.padding(top = spacing.l),
             enabled = !uiState.loading,
             isLoading = uiState.loading

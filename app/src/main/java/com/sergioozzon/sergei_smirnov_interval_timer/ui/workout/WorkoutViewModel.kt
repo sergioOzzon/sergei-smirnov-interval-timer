@@ -1,5 +1,6 @@
 package com.sergioozzon.sergei_smirnov_interval_timer.ui.workout
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.sergioozzon.sergei_smirnov_interval_timer.base.sound.WorkoutSoundService
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.BaseViewModel
@@ -163,6 +164,11 @@ class WorkoutViewModel(
         return "%02d:%02d".format(minutes, remainingSeconds)
     }
 
+    override fun onCleared() {
+        workoutSoundService.release()
+        super.onCleared()
+    }
+
     sealed interface Wish {
         data class InitWorkout(val workout: WorkoutDTO) : Wish
         object StartTimer : Wish
@@ -171,6 +177,7 @@ class WorkoutViewModel(
         object Tick : Wish
     }
 
+    @Immutable
     data class UiState(
         val workout: WorkoutDTO? = null,
         val timerState: TimerState = TimerState.IDLE,

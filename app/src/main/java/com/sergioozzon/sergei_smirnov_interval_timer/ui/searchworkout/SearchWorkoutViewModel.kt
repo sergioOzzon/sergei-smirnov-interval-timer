@@ -1,6 +1,7 @@
 package com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout
 
 import android.annotation.SuppressLint
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.sergioozzon.sergei_smirnov_interval_timer.base.network.NotFoundError
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.BaseViewModel
@@ -86,6 +87,7 @@ class SearchWorkoutViewModel(
         class UpdateState(val inputValue: String) : Wish
     }
 
+    @Immutable
     data class UiState(
         val loading: Boolean = false,
         val error: SearchWorkoutError? = null,

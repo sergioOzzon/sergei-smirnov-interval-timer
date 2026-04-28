@@ -7,13 +7,15 @@ import com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.SearchWork
 import com.sergioozzon.sergei_smirnov_interval_timer.ui.workout.WorkoutViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val mainModule = module {
 
-    single<WorkoutSoundService> {
+    factory {
         SoundPoolWorkoutSoundService(androidContext())
-    }
+    } bind WorkoutSoundService::class
+
     viewModelOf(::SearchWorkoutViewModel)
     viewModelOf(::WorkoutViewModel)
     single { WorkoutSharedViewModel() }

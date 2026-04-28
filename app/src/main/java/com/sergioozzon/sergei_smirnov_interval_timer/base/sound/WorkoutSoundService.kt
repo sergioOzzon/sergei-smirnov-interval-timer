@@ -4,4 +4,5 @@ interface WorkoutSoundService {
     fun playWorkoutStart()
     fun playNextInterval()
     fun playWorkoutFinished()
+    fun release()
 }

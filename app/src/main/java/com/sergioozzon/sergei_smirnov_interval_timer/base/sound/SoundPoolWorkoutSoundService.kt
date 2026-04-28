@@ -21,6 +21,7 @@ class SoundPoolWorkoutSoundService(
     private val mainHandler = Handler(Looper.getMainLooper())
     private var isBeepLoaded = false
     private var pendingBeeps = 0
+    private var isReleased = false
 
     private val soundPool = SoundPool.Builder()
         .setMaxStreams(MAX_STREAMS)
@@ -36,7 +37,7 @@ class SoundPoolWorkoutSoundService(
 
     init {
         soundPool.setOnLoadCompleteListener { _, sampleId, status ->
-            if (sampleId == beepSoundId && status == 0) {
+            if (!isReleased && sampleId == beepSoundId && status == 0) {
                 isBeepLoaded = true
                 repeat(pendingBeeps) {
                     playBeep()
@@ -62,7 +63,19 @@ class SoundPoolWorkoutSoundService(
         )
     }
 
+    override fun release() {
+        if (isReleased) return
+
+        isReleased = true
+        pendingBeeps = 0
+        mainHandler.removeCallbacksAndMessages(null)
+        soundPool.setOnLoadCompleteListener(null)
+        soundPool.release()
+    }
+
     private fun playBeepWhenReady() {
+        if (isReleased) return
+
         if (isBeepLoaded) {
             playBeep()
         } else {
@@ -71,6 +84,8 @@ class SoundPoolWorkoutSoundService(
     }
 
     private fun playBeep() {
+        if (isReleased) return
+
         soundPool.play(
             beepSoundId,
             BEEP_VOLUME,

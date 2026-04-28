@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,7 @@ import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.theme.IntervalTheme
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.theme.Surface
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.theme.TextPrimary
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.theme.TextSecondary
+import com.sergioozzon.sergei_smirnov_interval_timer.domain.IntervalDTO
 import com.sergioozzon.sergei_smirnov_interval_timer.domain.TimerDTO
 import com.sergioozzon.sergei_smirnov_interval_timer.domain.WorkoutDTO
 import com.sergioozzon.sergei_smirnov_interval_timer.ui.WorkoutSharedViewModel
@@ -52,7 +54,7 @@ fun WorkoutScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val sharedViewModel: WorkoutSharedViewModel = koinViewModel()
-    val workout by sharedViewModel.workout.collectAsState()
+    val workout by sharedViewModel.workout.collectAsStateWithLifecycle()
 
     LaunchedEffect(workout) {
         workout?.let {
@@ -60,10 +62,18 @@ fun WorkoutScreen(
         }
     }
 
+    val onAction = remember(viewModel) { viewModel::sendWish }
+    val onBackAction: () -> Unit = remember(navController) {
+        {
+            navController.popBackStack()
+        }
+    }
+
     WorkoutScreenContent(
         uiState = uiState,
-        onAction = viewModel::sendWish,
-        onBackAction = { navController.popBackStack() })
+        onAction = onAction,
+        onBackAction = onBackAction
+    )
 
 }
 
@@ -73,6 +83,12 @@ fun WorkoutScreenContent(
     onAction: (WorkoutViewModel.Wish) -> Unit,
     onBackAction: () -> Unit,
 ) {
+    val timer = uiState.workout?.timer
+    val intervals = timer?.intervals.orEmpty()
+    val intervalsCount = intervals.size
+    val onStartClick = remember(onAction) { { onAction(WorkoutViewModel.Wish.StartTimer) } }
+    val onPauseClick = remember(onAction) { { onAction(WorkoutViewModel.Wish.PauseTimer) } }
+    val onResetClick = remember(onAction) { { onAction(WorkoutViewModel.Wish.ResetTimer) } }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,12 +100,11 @@ fun WorkoutScreenContent(
     ) {
 
         WorkoutAppbar(
-            title = uiState.workout?.timer?.title ?: "",
+            title = timer?.title ?: "",
             time = uiState.formattedTotalTime,
             timerState = uiState.timerState,
-            onBackClick = {
-                onBackAction()
-            })
+            onBackClick = onBackAction
+        )
 
         WorkoutTimerCard(
             timerState = uiState.timerState,
@@ -105,7 +120,6 @@ fun WorkoutScreenContent(
         )
 
         if (uiState.timerState == TimerState.COMPLETED) {
-            val intervalsCount = uiState.workout?.timer?.intervals?.size ?: 0
             Row(
                 horizontalArrangement = Arrangement.spacedBy(IntervalTheme.spacing.l),
                 modifier = Modifier
@@ -143,20 +157,20 @@ fun WorkoutScreenContent(
             Text(
                 text = if (uiState.timerState == TimerState.IDLE) pluralStringResource(
                     R.plurals.workout_intervals_total,
-                    uiState.workout?.timer?.intervals?.size ?: 1,
-                    uiState.workout?.timer?.intervals?.size ?: 1
+                    intervalsCount,
+                    intervalsCount
                 )
                 else if (uiState.timerState == TimerState.COMPLETED) {
                     stringResource(
                         R.string.workout_intervals_step_completed,
                         uiState.currentIntervalIndex + 1,
-                        uiState.workout?.timer?.intervals?.size ?: 1
+                        intervalsCount
                     )
                 } else {
                     stringResource(
                         R.string.workout_intervals_step,
                         uiState.currentIntervalIndex + 1,
-                        uiState.workout?.timer?.intervals?.size ?: 1
+                        intervalsCount
                     )
                 }, style = MaterialTheme.typography.bodyMedium, color = TextSecondary
             )
@@ -165,16 +179,18 @@ fun WorkoutScreenContent(
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
-            items(uiState.workout?.timer?.intervals?.size ?: 0) { key ->
-                IntervalItem(
-                    name = uiState.workout?.timer?.intervals?.get(key)?.title ?: "",
-                    order = key + 1,
-                    duration = if (key == uiState.currentIntervalIndex) uiState.formattedIntervalTime
-                    else formatTime(
-                        uiState.workout?.timer?.intervals?.get(key)?.time ?: 0
-                    ),
-                    state = getIntervalState(uiState, key),
-                    progress = uiState.intervalProgress,
+            itemsIndexed(
+                items = intervals,
+                key = { index, interval -> interval.key(index) },
+                contentType = { _, _ -> "interval" }
+            ) { index, interval ->
+                WorkoutIntervalRow(
+                    interval = interval,
+                    index = index,
+                    currentIntervalIndex = uiState.currentIntervalIndex,
+                    formattedIntervalTime = uiState.formattedIntervalTime,
+                    timerState = uiState.timerState,
+                    intervalProgress = uiState.intervalProgress,
                     modifier = Modifier.padding(vertical = IntervalTheme.spacing.xs)
                 )
             }
@@ -182,16 +198,48 @@ fun WorkoutScreenContent(
 
         WorkoutControlButtons(
             timerState = uiState.timerState,
-            onStartClick = { onAction(WorkoutViewModel.Wish.StartTimer) },
-            onPauseClick = { onAction(WorkoutViewModel.Wish.PauseTimer) },
-            onResumeClick = { onAction(WorkoutViewModel.Wish.StartTimer) },
-            onRestartClick = { onAction(WorkoutViewModel.Wish.ResetTimer) },
-            onResetClick = { onAction(WorkoutViewModel.Wish.ResetTimer) },
-            onNewWorkoutClick = { onBackAction.invoke() },
+            onStartClick = onStartClick,
+            onPauseClick = onPauseClick,
+            onResumeClick = onStartClick,
+            onRestartClick = onResetClick,
+            onResetClick = onResetClick,
+            onNewWorkoutClick = onBackAction,
         )
 
     }
 
+}
+
+@Composable
+private fun WorkoutIntervalRow(
+    interval: IntervalDTO,
+    index: Int,
+    currentIntervalIndex: Int,
+    formattedIntervalTime: String,
+    timerState: TimerState,
+    intervalProgress: Float,
+    modifier: Modifier = Modifier,
+) {
+    val duration = if (index == currentIntervalIndex) {
+        formattedIntervalTime
+    } else {
+        remember(interval.time) { formatTime(interval.time) }
+    }
+    val state = getIntervalState(
+        timerState = timerState,
+        currentIntervalIndex = currentIntervalIndex,
+        key = index
+    )
+    val progress = if (index == currentIntervalIndex) intervalProgress else 0f
+
+    IntervalItem(
+        name = interval.title,
+        order = index + 1,
+        duration = duration,
+        state = state,
+        progress = progress,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -224,22 +272,30 @@ private fun WorkoutSummaryItem(
     }
 }
 
-fun getIntervalState(uiState: WorkoutViewModel.UiState, key: Int): IntervalState {
-    if (uiState.timerState == TimerState.COMPLETED) {
+fun getIntervalState(
+    timerState: TimerState,
+    currentIntervalIndex: Int,
+    key: Int,
+): IntervalState {
+    if (timerState == TimerState.COMPLETED) {
         return IntervalState.DONE // for change state all of intervals
     }
 
-    return if (uiState.currentIntervalIndex == key) {
-        when (uiState.timerState) {
+    return if (currentIntervalIndex == key) {
+        when (timerState) {
             TimerState.IDLE -> IntervalState.RUNNING
             TimerState.RUNNING -> IntervalState.RUNNING
             TimerState.PAUSED -> IntervalState.PAUSED
         }
-    } else if (uiState.currentIntervalIndex < key) {
+    } else if (currentIntervalIndex < key) {
         IntervalState.IDLE
     } else {
         IntervalState.COMPLETED
     }
+}
+
+private fun IntervalDTO.key(index: Int): String {
+    return "$index-$title-$time"
 }
 
 private fun formatTime(seconds: Int): String {

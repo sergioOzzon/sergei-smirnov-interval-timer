@@ -102,7 +102,7 @@ fun IntervalItem(
                             .padding(start = 4.dp)
                             .size(16.dp)
                             .align(Alignment.Center),
-                        tint = if (isCompleted) TextSecondary else Secondary
+                        tint = TextSecondary
                     )
                 } else {
                     NumberBadge(order, state)
