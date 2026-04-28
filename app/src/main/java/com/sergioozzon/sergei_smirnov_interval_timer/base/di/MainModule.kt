@@ -8,4 +8,6 @@ val mainModule = module {
 
     viewModelOf(::SearchWorkoutViewModel)
 
+    single { WorkoutSharedViewModel() }
+
 }

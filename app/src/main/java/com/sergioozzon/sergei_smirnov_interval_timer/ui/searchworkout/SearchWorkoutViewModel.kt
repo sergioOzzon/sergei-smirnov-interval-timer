@@ -17,6 +17,7 @@ private const val DEFAULT_WORKOUT_ID = "68"
 @SuppressLint("StaticFieldLeak")
 class SearchWorkoutViewModel(
     private val getWorkoutUseCase: GetWorkoutUseCase,
+    private val workoutSharedViewModel: WorkoutSharedViewModel
 ) : BaseViewModel<Wish, UiState, SideEffect>() {
 
     override val _uiState = MutableStateFlow(UiState())
@@ -42,7 +43,7 @@ class SearchWorkoutViewModel(
             }
 
             is Wish.HandleSuccess -> {
-                Log.d("workout", wish.workoutDTO.toString())
+                workoutSharedViewModel.setWorkout(wish.workoutDTO)
                 sendEffect(SideEffect.GoWorkoutScreen(wish.workoutDTO))
                 currentState.copy(
                     loading = false
