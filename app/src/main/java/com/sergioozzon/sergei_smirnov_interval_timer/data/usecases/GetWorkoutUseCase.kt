@@ -1,4 +1,4 @@
-package com.sergioozzon.sergei_smirnov_interval_timer.base.data.usecases
+package com.sergioozzon.sergei_smirnov_interval_timer.data.usecases
 
 import com.sergioozzon.sergei_smirnov_interval_timer.base.network.mappers.toDTO
 import com.sergioozzon.sergei_smirnov_interval_timer.base.network.services.WorkoutService
