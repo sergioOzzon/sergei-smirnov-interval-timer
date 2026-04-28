@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -123,7 +122,7 @@ fun SearchWorkoutInputField(
     modifier: Modifier = Modifier,
     placeholder: String = "",
     label: String? = null,
-    isError: Boolean = false,
+    errorText: String? = null,
     isEnabled: Boolean = false,
     keyboardAction: KeyboardActions = KeyboardActions { KeyboardActions.Default },
 ) {
@@ -156,7 +155,7 @@ fun SearchWorkoutInputField(
                 errorBorderColor = Error
             ),
             textStyle = MaterialTheme.typography.bodyLarge,
-            isError = isError,
+            isError = errorText != null,
             modifier = Modifier
                 .height(52.dp)
                 .fillMaxWidth(),
@@ -165,7 +164,7 @@ fun SearchWorkoutInputField(
                 imeAction = ImeAction.Search, keyboardType = KeyboardType.Number
             )
         )
-        if (isError) {
+        if (errorText != null) {
             Row(
                 modifier = Modifier.padding(top = IntervalTheme.spacing.s)
             ) {
@@ -178,7 +177,7 @@ fun SearchWorkoutInputField(
                         .align(Alignment.CenterVertically),
                 )
                 Text(
-                    text = stringResource(R.string.search_error_not_found),
+                    text = errorText,
                     color = Error,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(start = IntervalTheme.spacing.s)

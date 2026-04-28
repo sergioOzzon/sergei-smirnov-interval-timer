@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.SearchWorkoutScreen
+import com.sergioozzon.sergei_smirnov_interval_timer.ui.workout.WorkoutScreen
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
@@ -15,8 +16,8 @@ fun AppNavHost(navController: NavHostController) {
         composable<Destination.SearchWorkout> {
             SearchWorkoutScreen(navController)
         }
-        /*composable<Destination.Workout> {
+        composable<Destination.Workout> {
             WorkoutScreen(navController)
-        }*/
+        }
     }
 }

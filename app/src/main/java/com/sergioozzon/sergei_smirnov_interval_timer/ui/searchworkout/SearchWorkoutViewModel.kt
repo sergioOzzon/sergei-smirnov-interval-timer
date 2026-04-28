@@ -1,8 +1,8 @@
 package com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.sergioozzon.sergei_smirnov_interval_timer.base.network.NotFoundError
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.BaseViewModel
 import com.sergioozzon.sergei_smirnov_interval_timer.data.usecases.GetWorkoutUseCase
 import com.sergioozzon.sergei_smirnov_interval_timer.domain.WorkoutDTO
@@ -32,13 +32,13 @@ class SearchWorkoutViewModel(
                 getWorkout(currentState.inputValue)
                 currentState.copy(
                     loading = true,
-                    error = false
+                    error = null
                 )
             }
 
             is Wish.HandleFailure -> {
                 currentState.copy(
-                    error = true,
+                    error = wish.error,
                     loading = false
                 )
             }
@@ -53,7 +53,7 @@ class SearchWorkoutViewModel(
 
             is Wish.UpdateState -> {
                 currentState.copy(
-                    error = false,
+                    error = null,
                     inputValue = wish.inputValue
                 )
             }
@@ -66,27 +66,39 @@ class SearchWorkoutViewModel(
                 .onSuccess { workoutDTO ->
                     sendWish(Wish.HandleSuccess(workoutDTO))
                 }
-                .onFailure {
-                    sendWish(Wish.HandleFailure())
+                .onFailure { throwable ->
+                    sendWish(Wish.HandleFailure(throwable.toUiError()))
                 }
+        }
+    }
+
+    private fun Throwable.toUiError(): SearchWorkoutError {
+        return when (this) {
+            is NotFoundError -> SearchWorkoutError.NOT_FOUND
+            else -> SearchWorkoutError.UNKNOWN
         }
     }
 
     sealed interface Wish {
         class GetWorkout() : Wish
         class HandleSuccess(val workoutDTO: WorkoutDTO) : Wish
-        class HandleFailure : Wish
+        class HandleFailure(val error: SearchWorkoutError) : Wish
         class UpdateState(val inputValue: String) : Wish
     }
 
     data class UiState(
         val loading: Boolean = false,
-        val error: Boolean = false,
+        val error: SearchWorkoutError? = null,
         val inputValue: String = DEFAULT_WORKOUT_ID,
     )
 
     sealed interface SideEffect {
         class GoWorkoutScreen(val workoutDTO: WorkoutDTO) : SideEffect
+    }
+
+    enum class SearchWorkoutError {
+        NOT_FOUND,
+        UNKNOWN,
     }
 
 }

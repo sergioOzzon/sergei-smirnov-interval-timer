@@ -8,6 +8,13 @@ class NetworkResponseHandler {
             }
         }
     }
+
+    fun handleHttpError(code: Int, message: String): NetworkError {
+        return when (code) {
+            404 -> NotFoundError(message = "HTTP $code: $message")
+            else -> UnknownError(message = "HTTP $code: $message")
+        }
+    }
 }
 
 sealed class NetworkError(
@@ -20,3 +27,7 @@ data class UnknownError(
     override val cause: Throwable? = null,
 ) : NetworkError(message = message, cause = cause)
 
+data class NotFoundError(
+    override val message: String? = null,
+    override val cause: Throwable? = null,
+) : NetworkError(message = message, cause = cause)

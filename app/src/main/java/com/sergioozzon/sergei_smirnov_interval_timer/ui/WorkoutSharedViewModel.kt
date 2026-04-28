@@ -1,7 +1,7 @@
 package com.sergioozzon.sergei_smirnov_interval_timer.ui
 
 import androidx.lifecycle.ViewModel
-import com.learning.intervaltimer.domain.WorkoutDTO
+import com.sergioozzon.sergei_smirnov_interval_timer.domain.WorkoutDTO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

@@ -8,6 +8,7 @@
     <string name="search_button_load">Загрузить</string>
     <string name="search_button_loading">Загрузка…</string>
     <string name="search_error_not_found">Тренировка не найдена. Проверьте ID.</string>
+    <string name="search_error_unknown">Не удалось загрузить тренировку. Попробуйте еще раз.</string>
     <string name="search_button_retry">Повторить</string>
 
     <!-- Workout Screen -->
@@ -20,6 +21,7 @@
     <string name="workout_timer_total">Общее время</string>
     <string name="workout_intervals_title">Интервалы</string>
     <string name="workout_intervals_step">%1$s из %2$s</string>
+    <string name="workout_intervals_step_completed">%1$s из %2$s ✓</string>
     <string name="workout_button_start">Старт</string>
     <string name="workout_button_pause">Пауза</string>
     <string name="workout_button_resume">Продолжить</string>
@@ -28,7 +30,15 @@
     <string name="workout_button_new">Новая тренировка</string>
     <plurals name="workout_intervals_total">
         <item quantity="one">%1$s интервал</item>
+        <item quantity="few">%1$s интервала</item>
+        <item quantity="many">%1$s интервалов</item>
         <item quantity="other">%1$s интервала</item>
+    </plurals>
+    <plurals name="workout_intervals_count_label">
+        <item quantity="one">Интервал</item>
+        <item quantity="few">Интервала</item>
+        <item quantity="many">Интервалов</item>
+        <item quantity="other">Интервалов</item>
     </plurals>
 
 </resources>

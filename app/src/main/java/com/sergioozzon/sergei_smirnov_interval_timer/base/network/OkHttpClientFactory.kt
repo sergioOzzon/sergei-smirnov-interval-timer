@@ -47,12 +47,7 @@ class OkHttpClientFactory {
     ): Interceptor {
         return Interceptor { chain ->
             runCatching {
-                val response = chain.proceed(chain.request())
-                if (!response.isSuccessful) {
-                    response.close()
-                    throw IllegalStateException("HTTP ${response.code}: ${response.message}")
-                }
-                response
+                chain.proceed(chain.request())
             }.getOrElse { cause ->
                 throw networkResponseHandler.handleResponseError(cause)
             }
