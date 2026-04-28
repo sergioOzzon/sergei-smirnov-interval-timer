@@ -84,7 +84,9 @@ fun PrimaryButton(
             Icon(
                 painter = painterResource(iconResId),
                 contentDescription = null,
-                modifier = Modifier.padding(end = IntervalTheme.spacing.s),
+                modifier = Modifier
+                    .padding(end = IntervalTheme.spacing.xs)
+                    .size(16.dp),
                 tint = Color.White
             )
         }
