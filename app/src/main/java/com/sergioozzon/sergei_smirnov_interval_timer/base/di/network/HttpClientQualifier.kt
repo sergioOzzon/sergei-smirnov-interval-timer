@@ -5,7 +5,7 @@ import org.koin.core.qualifier.QualifierValue
 
 sealed interface HttpClientQualifier : Qualifier {
 
-    object WorkoutQualifier : HttpClientQualifier {
-        override val value: QualifierValue = "WorkoutHttpClient"
+    data object WorkoutQualifier : HttpClientQualifier {
+        override val value: QualifierValue = "WorkoutOkHttpClient"
     }
 }

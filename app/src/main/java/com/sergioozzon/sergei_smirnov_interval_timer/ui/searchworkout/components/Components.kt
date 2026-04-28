@@ -1,4 +1,4 @@
-package com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout
+package com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column

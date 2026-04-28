@@ -1,18 +1,15 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.ktorfit)
 }
 
 android {
     namespace = "com.sergioozzon.sergei_smirnov_interval_timer"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.sergioozzon.sergei_smirnov_interval_timer"
@@ -40,6 +37,17 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    packaging {
+        resources {
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+        }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
@@ -69,15 +77,9 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
-    // Ktor
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.json)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.serialization)
-    implementation(libs.ktor.serialization.json)
-    implementation(libs.ktor.client.logging)
-
-    // Ktorfit
-    implementation(libs.ktorfit.lib)
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
 }

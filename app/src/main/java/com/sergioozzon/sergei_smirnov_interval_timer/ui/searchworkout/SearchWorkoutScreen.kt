@@ -38,6 +38,8 @@ import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.theme.Primary
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.theme.PrimaryLight
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.theme.TextSecondary
 import com.sergioozzon.sergei_smirnov_interval_timer.navigation.Destination
+import com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.components.PrimaryButton
+import com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.components.SearchWorkoutInputField
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.compose.viewmodel.koinViewModel

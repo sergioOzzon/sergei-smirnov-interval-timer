@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sergioozzon.sergei_smirnov_interval_timer.base.ui.BaseViewModel
 import com.sergioozzon.sergei_smirnov_interval_timer.data.usecases.GetWorkoutUseCase
 import com.sergioozzon.sergei_smirnov_interval_timer.domain.WorkoutDTO
+import com.sergioozzon.sergei_smirnov_interval_timer.ui.WorkoutSharedViewModel
 import com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.SearchWorkoutViewModel.SideEffect
 import com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.SearchWorkoutViewModel.UiState
 import com.sergioozzon.sergei_smirnov_interval_timer.ui.searchworkout.SearchWorkoutViewModel.Wish

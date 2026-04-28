@@ -1,10 +1,8 @@
 package com.sergioozzon.sergei_smirnov_interval_timer.base.network
 
-import io.ktor.client.request.HttpRequest
-
 class NetworkResponseHandler {
-    suspend fun handleResponseError(cause: Throwable, request: HttpRequest) {
-        throw when (cause) {
+    fun handleResponseError(cause: Throwable): NetworkError {
+        return when (cause) {
             else -> {
                 UnknownError(message = cause.message, cause = cause)
             }
@@ -21,5 +19,4 @@ data class UnknownError(
     override val message: String? = null,
     override val cause: Throwable? = null,
 ) : NetworkError(message = message, cause = cause)
-
 

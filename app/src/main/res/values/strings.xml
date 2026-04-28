@@ -10,4 +10,25 @@
     <string name="search_error_not_found">Тренировка не найдена. Проверьте ID.</string>
     <string name="search_button_retry">Повторить</string>
 
+    <!-- Workout Screen -->
+    <string name="workout_timer_completed">Завершена</string>
+    <string name="workout_state_idle">Готово к старту</string>
+    <string name="workout_state_running">Выполняетcя</string>
+    <string name="workout_state_pause">На паузе</string>
+    <string name="workout_state_completed">Тренировка завершена</string>
+    <string name="workout_timer_progress">Прошло %1$s из %2$s</string>
+    <string name="workout_timer_total">Общее время</string>
+    <string name="workout_intervals_title">Интервалы</string>
+    <string name="workout_intervals_step">%1$s из %2$s</string>
+    <string name="workout_button_start">Старт</string>
+    <string name="workout_button_pause">Пауза</string>
+    <string name="workout_button_resume">Продолжить</string>
+    <string name="workout_button_again">Запустить заново</string>
+    <string name="workout_button_reset">Сбросить тренировку</string>
+    <string name="workout_button_new">Новая тренировка</string>
+    <plurals name="workout_intervals_total">
+        <item quantity="one">%1$s интервал</item>
+        <item quantity="other">%1$s интервала</item>
+    </plurals>
+
 </resources>
